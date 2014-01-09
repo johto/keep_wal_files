@@ -10,20 +10,23 @@
 
 #define XLOG_DATA_FNAME_LEN 24
 
+static const char *progname = "keep_wal_files";
+
 
 static void
 check_xlog_filename(const char *fname, const char *origin)
 {
 	if (strlen(fname) != XLOG_DATA_FNAME_LEN)
 	{
-		fprintf(stderr, "%s %s has invalid length %d, expected %d\n",
-					origin, fname, (int) strlen(fname), XLOG_DATA_FNAME_LEN);
+		fprintf(stderr, "%s: %s \"%s\" has invalid length %d, expected %d\n",
+					progname, origin, fname, (int) strlen(fname), XLOG_DATA_FNAME_LEN);
 		exit(1);
 	}
 
 	if (strspn(fname, "0123456789ABCDEF") != XLOG_DATA_FNAME_LEN)
 	{
-		fprintf(stderr, "%s %s is not a valid xlog filename\n", origin, fname);
+		fprintf(stderr, "%s: %s \"%s\" is not a valid xlog filename\n",
+                    progname, origin, fname);
 		exit(1);
 	}
 }
@@ -37,7 +40,7 @@ int main(int argc, char *argv[])
 
 	if (argc != 3)
 	{
-		fprintf(stderr, "usage: %s <progressfile> <%%f>\n", argv[0]);
+		fprintf(stderr, "Usage: %s <progressfile> <%%f>\n", argv[0]);
 		exit(1);
 	}
 
@@ -46,7 +49,8 @@ int main(int argc, char *argv[])
 	fh = fopen(argv[1], "r");
 	if (!fh)
 	{
-		fprintf(stderr, "could not open file %s for reading: %s\n", argv[1], strerror(errno));
+		fprintf(stderr, "%s: could not open file %s for reading: %s\n",
+                    progname, argv[1], strerror(errno));
 		exit(1);
 	}
 
@@ -59,7 +63,8 @@ int main(int argc, char *argv[])
 
 	if ((err = ferror(fh)) != 0)
 	{
-		fprintf(stderr, "could not read from progress file: %s\n", strerror(err));
+		fprintf(stderr, "%s: could not read from progress file: %s\n",
+                    progname, strerror(err));
 		exit(1);
 	}
 
