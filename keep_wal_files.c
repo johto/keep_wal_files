@@ -8,7 +8,7 @@
  * copied from pg_archivecleanup.
  */
 
-#define XLOG_DATA_FNAME_LEN 24
+#define XLOG_DATA_FNAME_LEN  24
 
 static const char *progname = "keep_wal_files";
 
@@ -31,7 +31,8 @@ check_xlog_filename(const char *fname, const char *origin)
 	}
 }
 
-int main(int argc, char *argv[])
+int
+main(int argc, char *argv[])
 {
 	FILE *fh;
 	char buf[65];
@@ -44,7 +45,7 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-	check_xlog_filename(argv[2], "%%f");
+	check_xlog_filename(argv[2], "%f");
 
 	fh = fopen(argv[1], "r");
 	if (!fh)
