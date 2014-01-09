@@ -13,13 +13,14 @@
 static const char *progname = "record_standby_location";
 
 
-static void
+static int
 get_standby_location(const char *standby, char *buf)
 {
     PGconn *conn;
     PGresult *res;
     const char *values[] = { standby, NULL };
     int len;
+    int ret;
 
     conn = PQconnectdb("");
     if (PQstatus(conn) != CONNECTION_OK)
@@ -50,10 +51,19 @@ get_standby_location(const char *standby, char *buf)
         exit(1);
     }
 
-    len = PQgetlength(res, 0, 0);
-    memcpy(buf, PQgetvalue(res, 0, 0), len);
+    if (PQgetisnull(res, 0, 0) == 0)
+    {
+        len = PQgetlength(res, 0, 0);
+        memcpy(buf, PQgetvalue(res, 0, 0), len);
+        buf[len] = '\0';
+        ret = 1;
+    }
+    else
+        ret = 0;
+
     PQclear(res);
-    buf[len] = '\0';
+    PQfinish(conn);
+    return ret;
 }
 
 int
@@ -72,7 +82,9 @@ main(int argc, char *argv[])
 		exit(1);
 	}
 
-    get_standby_location(argv[2], buf);
+    /* silently exit if the standby isn't connected */
+    if (get_standby_location(argv[2], buf) == 0)
+        exit(2);
 
     /*
      * Record the location, but write to a temp file first to make sure the
