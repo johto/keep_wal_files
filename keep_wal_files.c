@@ -55,18 +55,17 @@ int main(int argc, char *argv[])
 	}
 
 	len = fread(buf, 1, sizeof(buf) - 1, fh);
-
-	/* kill trailing newlines */
-	while (len > 0 && (buf[len-1] == '\r' || buf[len-1] == '\n'))
-		len--;
-	buf[len] = '\0';
-
 	if ((err = ferror(fh)) != 0)
 	{
 		fprintf(stderr, "%s: could not read from progress file: %s\n",
                     progname, strerror(err));
 		exit(1);
 	}
+
+	/* kill trailing newlines */
+	while (len > 0 && (buf[len-1] == '\r' || buf[len-1] == '\n'))
+		len--;
+	buf[len] = '\0';
 
 	fclose(fh);
 
