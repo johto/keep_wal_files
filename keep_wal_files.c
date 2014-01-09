@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
 
 	fclose(fh);
 
-	check_xlog_filename(buf, "progress file");
+	check_xlog_filename(buf, "progress file contents");
 
 	return strcmp(buf + 8, argv[2] + 8) > 0 ?  0 : 2;
 }
