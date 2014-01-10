@@ -26,7 +26,7 @@ check_xlog_filename(const char *fname, const char *origin)
 	if (strspn(fname, "0123456789ABCDEF") != XLOG_DATA_FNAME_LEN)
 	{
 		fprintf(stderr, "%s: %s \"%s\" is not a valid xlog filename\n",
-                    progname, origin, fname);
+					progname, origin, fname);
 		exit(1);
 	}
 }
@@ -51,7 +51,7 @@ main(int argc, char *argv[])
 	if (!fh)
 	{
 		fprintf(stderr, "%s: could not open file %s for reading: %s\n",
-                    progname, argv[1], strerror(errno));
+					progname, argv[1], strerror(errno));
 		exit(1);
 	}
 
@@ -59,7 +59,7 @@ main(int argc, char *argv[])
 	if ((err = ferror(fh)) != 0)
 	{
 		fprintf(stderr, "%s: could not read from progress file: %s\n",
-                    progname, strerror(err));
+					progname, strerror(err));
 		exit(1);
 	}
 
