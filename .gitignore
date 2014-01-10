@@ -1,2 +1,3 @@
 keep_wal_files
+record_standby_location
 *.swp
