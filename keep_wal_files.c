@@ -8,8 +8,9 @@
  * copied from pg_archivecleanup.
  */
 
-#define XLOG_DATA_FNAME_LEN    24
-#define XLOG_BACKUP_FNAME_LEN  40
+#define XLOG_DATA_FNAME_LEN			24
+#define XLOG_BACKUP_FNAME_LEN		40
+#define XLOG_TLHISTORY_FNAME_LEN	16
 
 static const char *progname = "keep_wal_files";
 
@@ -53,7 +54,15 @@ main(int argc, char *argv[])
 		fprintf(stderr, "%s: ignoring backup file %s\n", progname, argv[2]);
 		exit(0);
 	}
+	/* same goes for timeline history files */
+	if (strlen(argv[2]) == XLOG_TLHISTORY_FNAME_LEN &&
+		strstr(argv[2], ".history") == argv[2] + 8)
+	{
+		fprintf(stderr, "%s: ignoring history timeline file %s\n", progname, argv[2]);
+		exit(0);
+	}
 
+	/* nope, this should be an xlog file */
 	check_xlog_filename(argv[2], "%f");
 
 	fh = fopen(argv[1], "r");
