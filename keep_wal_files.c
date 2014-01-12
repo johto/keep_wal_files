@@ -71,13 +71,12 @@ main(int argc, char *argv[])
 					progname, strerror(err));
 		exit(1);
 	}
+	fclose(fh);
 
 	/* kill trailing newlines */
 	while (len > 0 && (buf[len-1] == '\r' || buf[len-1] == '\n'))
 		len--;
 	buf[len] = '\0';
-
-	fclose(fh);
 
 	check_xlog_filename(buf, "progress file contents");
 
