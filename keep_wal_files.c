@@ -8,7 +8,8 @@
  * copied from pg_archivecleanup.
  */
 
-#define XLOG_DATA_FNAME_LEN  24
+#define XLOG_DATA_FNAME_LEN    24
+#define XLOG_BACKUP_FNAME_LEN  40
 
 static const char *progname = "keep_wal_files";
 
@@ -43,6 +44,14 @@ main(int argc, char *argv[])
 	{
 		fprintf(stderr, "Usage: %s <progressfile> <%%f>\n", argv[0]);
 		exit(1);
+	}
+
+	/* if it's a backup file, "archive" immediately */
+	if (strlen(argv[2]) == XLOG_BACKUP_FNAME_LEN &&
+		strstr(argv[2], ".backup") == argv[2] + 33)
+	{
+		fprintf(stderr, "%s: ignoring backup file %s\n", progname, argv[2]);
+		exit(0);
 	}
 
 	check_xlog_filename(argv[2], "%f");
