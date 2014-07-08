@@ -4,7 +4,7 @@
 #include <string.h>
 
 /*
- * N.B: the assumptions we make about the filenames and the comparison code is
+ * N.B: the assumptions we make about the filenames and the comparison code are
  * copied from pg_archivecleanup.
  */
 
